@@ -17,20 +17,21 @@ type TOpenModal = (account?: Account) => void;
 
 export default function AccountList({
   accounts,
-   
+
 }: {
   accounts: CompleteAccount[];
-   
+
 }) {
   const { optimisticAccounts, addOptimisticAccount } = useOptimisticAccounts(
     accounts,
-     
+
   );
   const [open, setOpen] = useState(false);
   const [activeAccount, setActiveAccount] = useState<Account | null>(null);
   const openModal = (account?: Account) => {
     setOpen(true);
-    account ? setActiveAccount(account) : setActiveAccount(null);
+    if (account) setActiveAccount(account)
+    else setActiveAccount(null);
   };
   const closeModal = () => setOpen(false);
 
@@ -46,7 +47,7 @@ export default function AccountList({
           addOptimistic={addOptimisticAccount}
           openModal={openModal}
           closeModal={closeModal}
-          
+
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
@@ -73,7 +74,6 @@ export default function AccountList({
 
 const Account = ({
   account,
-  openModal,
 }: {
   account: CompleteAccount;
   openModal: TOpenModal;
@@ -99,7 +99,7 @@ const Account = ({
         <div>{account.name}</div>
       </div>
       <Button variant={"link"} asChild>
-        <Link href={ basePath + "/" + account.id }>
+        <Link href={basePath + "/" + account.id}>
           Edit
         </Link>
       </Button>

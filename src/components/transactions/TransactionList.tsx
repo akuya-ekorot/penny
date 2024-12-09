@@ -18,21 +18,22 @@ type TOpenModal = (transaction?: Transaction) => void;
 export default function TransactionList({
   transactions,
   accounts,
-  accountId 
+  accountId
 }: {
   transactions: CompleteTransaction[];
   accounts: Account[];
-  accountId?: AccountId 
+  accountId?: AccountId
 }) {
   const { optimisticTransactions, addOptimisticTransaction } = useOptimisticTransactions(
     transactions,
-    accounts 
+    accounts
   );
   const [open, setOpen] = useState(false);
   const [activeTransaction, setActiveTransaction] = useState<Transaction | null>(null);
   const openModal = (transaction?: Transaction) => {
     setOpen(true);
-    transaction ? setActiveTransaction(transaction) : setActiveTransaction(null);
+    if (transaction) setActiveTransaction(transaction)
+    else setActiveTransaction(null);
   };
   const closeModal = () => setOpen(false);
 
@@ -49,7 +50,7 @@ export default function TransactionList({
           openModal={openModal}
           closeModal={closeModal}
           accounts={accounts}
-        accountId={accountId}
+          accountId={accountId}
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
@@ -76,7 +77,6 @@ export default function TransactionList({
 
 const Transaction = ({
   transaction,
-  openModal,
 }: {
   transaction: CompleteTransaction;
   openModal: TOpenModal;
@@ -102,7 +102,7 @@ const Transaction = ({
         <div>{transaction.description}</div>
       </div>
       <Button variant={"link"} asChild>
-        <Link href={ basePath + "/" + transaction.id }>
+        <Link href={basePath + "/" + transaction.id}>
           Edit
         </Link>
       </Button>

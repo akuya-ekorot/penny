@@ -52,7 +52,7 @@ const TransactionForm = ({
   const { errors, hasErrors, setErrors, handleChange } =
     useValidatedForm<Transaction>(insertTransactionParams);
   const editing = !!transaction?.id;
-  
+
   const [isDeleting, setIsDeleting] = useState(false);
   const [pending, startMutation] = useTransition();
 
@@ -66,13 +66,13 @@ const TransactionForm = ({
   ) => {
     const failed = Boolean(data?.error);
     if (failed) {
-      openModal && openModal(data?.values);
+      if (openModal) openModal(data?.values);
       toast.error(`Failed to ${action}`, {
         description: data?.error ?? "Error",
       });
     } else {
       router.refresh();
-      postSuccess && postSuccess();
+      if (postSuccess) postSuccess();
       toast.success(`Transaction ${action}d!`);
       if (action === "delete") router.push(backpath);
     }
@@ -88,7 +88,7 @@ const TransactionForm = ({
       return;
     }
 
-    closeModal && closeModal();
+    if (closeModal) closeModal();
     const values = transactionParsed.data;
     const pendingTransaction: Transaction = {
       updatedAt: transaction?.updatedAt ?? new Date(),
@@ -99,7 +99,7 @@ const TransactionForm = ({
     };
     try {
       startMutation(async () => {
-        addOptimistic && addOptimistic({
+        if (addOptimistic) addOptimistic({
           data: pendingTransaction,
           action: editing ? "update" : "create",
         });
@@ -110,7 +110,7 @@ const TransactionForm = ({
 
         const errorFormatted = {
           error: error ?? "Error",
-          values: pendingTransaction 
+          values: pendingTransaction
         };
         onSuccess(
           editing ? "update" : "create",
@@ -127,7 +127,7 @@ const TransactionForm = ({
   return (
     <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
       {/* Schema fields start */}
-              <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -148,7 +148,7 @@ const TransactionForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -169,7 +169,7 @@ const TransactionForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -207,11 +207,11 @@ const TransactionForm = ({
             <SelectValue placeholder="Select a account" />
           </SelectTrigger>
           <SelectContent>
-          {accounts?.map((account) => (
-            <SelectItem key={account.id} value={account.id.toString()}>
-              {account.id}{/* TODO: Replace with a field from the account model */}
-            </SelectItem>
-           ))}
+            {accounts?.map((account) => (
+              <SelectItem key={account.id} value={account.id.toString()}>
+                {account.id}{/* TODO: Replace with a field from the account model */}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         {errors?.accountId ? (
@@ -219,7 +219,7 @@ const TransactionForm = ({
         ) : (
           <div className="h-6" />
         )}
-      </div> }
+      </div>}
       {/* Schema fields end */}
 
       {/* Save Button */}
@@ -233,9 +233,9 @@ const TransactionForm = ({
           variant={"destructive"}
           onClick={() => {
             setIsDeleting(true);
-            closeModal && closeModal();
+            if (closeModal) closeModal();
             startMutation(async () => {
-              addOptimistic && addOptimistic({ action: "delete", data: transaction });
+              if (addOptimistic) addOptimistic({ action: "delete", data: transaction });
               const error = await deleteTransactionAction(transaction.id);
               setIsDeleting(false);
               const errorFormatted = {
@@ -260,7 +260,7 @@ const SaveButton = ({
   editing,
   errors,
 }: {
-  editing: Boolean;
+  editing: boolean;
   errors: boolean;
 }) => {
   const { pending } = useFormStatus();

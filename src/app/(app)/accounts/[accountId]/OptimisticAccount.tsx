@@ -10,16 +10,16 @@ import Modal from "@/components/shared/Modal";
 import AccountForm from "@/components/accounts/AccountForm";
 
 
-export default function OptimisticAccount({ 
+export default function OptimisticAccount({
   account,
-   
-}: { 
-  account: Account; 
-  
-  
+
+}: {
+  account: Account;
+
+
 }) {
   const [open, setOpen] = useState(false);
-  const openModal = (_?: Account) => {
+  const openModal = () => {
     setOpen(true);
   };
   const closeModal = () => setOpen(false);
@@ -32,7 +32,7 @@ export default function OptimisticAccount({
       <Modal open={open} setOpen={setOpen}>
         <AccountForm
           account={optimisticAccount}
-          
+
           closeModal={closeModal}
           openModal={openModal}
           addOptimistic={updateAccount}

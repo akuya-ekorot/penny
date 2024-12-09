@@ -17,20 +17,21 @@ type TOpenModal = (budget?: Budget) => void;
 
 export default function BudgetList({
   budgets,
-   
+
 }: {
   budgets: CompleteBudget[];
-   
+
 }) {
   const { optimisticBudgets, addOptimisticBudget } = useOptimisticBudgets(
     budgets,
-     
+
   );
   const [open, setOpen] = useState(false);
   const [activeBudget, setActiveBudget] = useState<Budget | null>(null);
   const openModal = (budget?: Budget) => {
     setOpen(true);
-    budget ? setActiveBudget(budget) : setActiveBudget(null);
+    if (budget) setActiveBudget(budget)
+    else setActiveBudget(null);
   };
   const closeModal = () => setOpen(false);
 
@@ -46,7 +47,7 @@ export default function BudgetList({
           addOptimistic={addOptimisticBudget}
           openModal={openModal}
           closeModal={closeModal}
-          
+
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
@@ -73,7 +74,6 @@ export default function BudgetList({
 
 const Budget = ({
   budget,
-  openModal,
 }: {
   budget: CompleteBudget;
   openModal: TOpenModal;
@@ -99,7 +99,7 @@ const Budget = ({
         <div>{budget.name}</div>
       </div>
       <Button variant={"link"} asChild>
-        <Link href={ basePath + "/" + budget.id }>
+        <Link href={basePath + "/" + budget.id}>
           Edit
         </Link>
       </Button>

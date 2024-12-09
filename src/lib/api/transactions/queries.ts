@@ -6,17 +6,25 @@ import { accounts } from "@/lib/db/schema/accounts";
 
 export const getTransactions = async () => {
   const { session } = await getUserAuth();
-  const rows = await db.select({ transaction: transactions, account: accounts }).from(transactions).leftJoin(accounts, eq(transactions.accountId, accounts.id)).where(eq(transactions.userId, session?.user.id!));
-  const t = rows .map((r) => ({ ...r.transaction, account: r.account})); 
+
+  if (!session) {
+    return { transactions: [] }
+  }
+
+  const rows = await db.select({ transaction: transactions, account: accounts }).from(transactions).leftJoin(accounts, eq(transactions.accountId, accounts.id)).where(eq(transactions.userId, session?.user.id ?? ''));
+  const t = rows.map((r) => ({ ...r.transaction, account: r.account }));
   return { transactions: t };
 };
 
 export const getTransactionById = async (id: TransactionId) => {
   const { session } = await getUserAuth();
+
+  if (!session) throw { error: 'Not authorized' }
+
   const { id: transactionId } = transactionIdSchema.parse({ id });
-  const [row] = await db.select({ transaction: transactions, account: accounts }).from(transactions).where(and(eq(transactions.id, transactionId), eq(transactions.userId, session?.user.id!))).leftJoin(accounts, eq(transactions.accountId, accounts.id));
+  const [row] = await db.select({ transaction: transactions, account: accounts }).from(transactions).where(and(eq(transactions.id, transactionId), eq(transactions.userId, session.user.id))).leftJoin(accounts, eq(transactions.accountId, accounts.id));
   if (row === undefined) return {};
-  const t =  { ...row.transaction, account: row.account } ;
+  const t = { ...row.transaction, account: row.account };
   return { transaction: t };
 };
 

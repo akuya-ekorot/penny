@@ -15,12 +15,12 @@ export const revalidate = 0;
 export default async function AccountPage({
   params,
 }: {
-  params: { accountId: string };
+  params: Promise<{ accountId: string }>;
 }) {
 
   return (
     <main className="overflow-auto">
-      <Account id={params.accountId} />
+      <Account id={(await params).accountId} />
     </main>
   );
 }

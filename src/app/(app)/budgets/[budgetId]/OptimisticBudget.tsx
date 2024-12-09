@@ -10,16 +10,16 @@ import Modal from "@/components/shared/Modal";
 import BudgetForm from "@/components/budgets/BudgetForm";
 
 
-export default function OptimisticBudget({ 
+export default function OptimisticBudget({
   budget,
-   
-}: { 
-  budget: Budget; 
-  
-  
+
+}: {
+  budget: Budget;
+
+
 }) {
   const [open, setOpen] = useState(false);
-  const openModal = (_?: Budget) => {
+  const openModal = () => {
     setOpen(true);
   };
   const closeModal = () => setOpen(false);
@@ -32,7 +32,7 @@ export default function OptimisticBudget({
       <Modal open={open} setOpen={setOpen}>
         <BudgetForm
           budget={optimisticBudget}
-          
+
           closeModal={closeModal}
           openModal={openModal}
           addOptimistic={updateBudget}

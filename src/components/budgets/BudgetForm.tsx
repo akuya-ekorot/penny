@@ -27,7 +27,7 @@ import {
 
 
 const BudgetForm = ({
-  
+
   budget,
   openModal,
   closeModal,
@@ -35,7 +35,7 @@ const BudgetForm = ({
   postSuccess,
 }: {
   budget?: Budget | null;
-  
+
   openModal?: (budget?: Budget) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -44,7 +44,7 @@ const BudgetForm = ({
   const { errors, hasErrors, setErrors, handleChange } =
     useValidatedForm<Budget>(insertBudgetParams);
   const editing = !!budget?.id;
-  
+
   const [isDeleting, setIsDeleting] = useState(false);
   const [pending, startMutation] = useTransition();
 
@@ -58,13 +58,13 @@ const BudgetForm = ({
   ) => {
     const failed = Boolean(data?.error);
     if (failed) {
-      openModal && openModal(data?.values);
+      if (openModal) openModal(data?.values);
       toast.error(`Failed to ${action}`, {
         description: data?.error ?? "Error",
       });
     } else {
       router.refresh();
-      postSuccess && postSuccess();
+      if (postSuccess) postSuccess();
       toast.success(`Budget ${action}d!`);
       if (action === "delete") router.push(backpath);
     }
@@ -74,13 +74,13 @@ const BudgetForm = ({
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    const budgetParsed = await insertBudgetParams.safeParseAsync({  ...payload });
+    const budgetParsed = await insertBudgetParams.safeParseAsync({ ...payload });
     if (!budgetParsed.success) {
       setErrors(budgetParsed?.error.flatten().fieldErrors);
       return;
     }
 
-    closeModal && closeModal();
+    if (closeModal) closeModal();
     const values = budgetParsed.data;
     const pendingBudget: Budget = {
       updatedAt: budget?.updatedAt ?? new Date(),
@@ -91,7 +91,7 @@ const BudgetForm = ({
     };
     try {
       startMutation(async () => {
-        addOptimistic && addOptimistic({
+        if (addOptimistic) addOptimistic({
           data: pendingBudget,
           action: editing ? "update" : "create",
         });
@@ -102,7 +102,7 @@ const BudgetForm = ({
 
         const errorFormatted = {
           error: error ?? "Error",
-          values: pendingBudget 
+          values: pendingBudget
         };
         onSuccess(
           editing ? "update" : "create",
@@ -119,7 +119,7 @@ const BudgetForm = ({
   return (
     <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
       {/* Schema fields start */}
-              <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -140,7 +140,7 @@ const BudgetForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -161,7 +161,7 @@ const BudgetForm = ({
           <div className="h-6" />
         )}
       </div>
-<div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -178,7 +178,7 @@ const BudgetForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -199,7 +199,7 @@ const BudgetForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -220,7 +220,7 @@ const BudgetForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -241,7 +241,7 @@ const BudgetForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -262,7 +262,7 @@ const BudgetForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -296,9 +296,9 @@ const BudgetForm = ({
           variant={"destructive"}
           onClick={() => {
             setIsDeleting(true);
-            closeModal && closeModal();
+            if (closeModal) closeModal();
             startMutation(async () => {
-              addOptimistic && addOptimistic({ action: "delete", data: budget });
+              if (addOptimistic) addOptimistic({ action: "delete", data: budget });
               const error = await deleteBudgetAction(budget.id);
               setIsDeleting(false);
               const errorFormatted = {
@@ -323,7 +323,7 @@ const SaveButton = ({
   editing,
   errors,
 }: {
-  editing: Boolean;
+  editing: boolean;
   errors: boolean;
 }) => {
   const { pending } = useFormStatus();

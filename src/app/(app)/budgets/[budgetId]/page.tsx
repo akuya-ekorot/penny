@@ -15,12 +15,12 @@ export const revalidate = 0;
 export default async function BudgetPage({
   params,
 }: {
-  params: { budgetId: string };
+  params: Promise<{ budgetId: string }>;
 }) {
 
   return (
     <main className="overflow-auto">
-      <Budget id={params.budgetId} />
+      <Budget id={(await params).budgetId} />
     </main>
   );
 }
@@ -29,14 +29,14 @@ const Budget = async ({ id }: { id: string }) => {
   await checkAuth();
 
   const { budget } = await getBudgetById(id);
-  
+
 
   if (!budget) notFound();
   return (
     <Suspense fallback={<Loading />}>
       <div className="relative">
         <BackButton currentResource="budgets" />
-        <OptimisticBudget budget={budget}  />
+        <OptimisticBudget budget={budget} />
       </div>
     </Suspense>
   );

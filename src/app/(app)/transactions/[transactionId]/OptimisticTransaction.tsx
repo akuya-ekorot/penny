@@ -10,18 +10,18 @@ import Modal from "@/components/shared/Modal";
 import TransactionForm from "@/components/transactions/TransactionForm";
 import { type Account, type AccountId } from "@/lib/db/schema/accounts";
 
-export default function OptimisticTransaction({ 
+export default function OptimisticTransaction({
   transaction,
   accounts,
-  accountId 
-}: { 
-  transaction: Transaction; 
-  
+  accountId
+}: {
+  transaction: Transaction;
+
   accounts: Account[];
   accountId?: AccountId
 }) {
   const [open, setOpen] = useState(false);
-  const openModal = (_?: Transaction) => {
+  const openModal = () => {
     setOpen(true);
   };
   const closeModal = () => setOpen(false);
@@ -35,7 +35,7 @@ export default function OptimisticTransaction({
         <TransactionForm
           transaction={optimisticTransaction}
           accounts={accounts}
-        accountId={accountId}
+          accountId={accountId}
           closeModal={closeModal}
           openModal={openModal}
           addOptimistic={updateTransaction}

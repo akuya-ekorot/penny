@@ -15,12 +15,12 @@ export const revalidate = 0;
 export default async function TransactionPage({
   params,
 }: {
-  params: { transactionId: string };
+  params: Promise<{ transactionId: string }>;
 }) {
 
   return (
     <main className="overflow-auto">
-      <Transaction id={params.transactionId} />
+      <Transaction id={(await params).transactionId} />
     </main>
   );
 }

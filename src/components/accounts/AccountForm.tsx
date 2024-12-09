@@ -26,7 +26,7 @@ import {
 
 
 const AccountForm = ({
-  
+
   account,
   openModal,
   closeModal,
@@ -34,7 +34,7 @@ const AccountForm = ({
   postSuccess,
 }: {
   account?: Account | null;
-  
+
   openModal?: (account?: Account) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -43,7 +43,7 @@ const AccountForm = ({
   const { errors, hasErrors, setErrors, handleChange } =
     useValidatedForm<Account>(insertAccountParams);
   const editing = !!account?.id;
-  
+
   const [isDeleting, setIsDeleting] = useState(false);
   const [pending, startMutation] = useTransition();
 
@@ -57,13 +57,14 @@ const AccountForm = ({
   ) => {
     const failed = Boolean(data?.error);
     if (failed) {
-      openModal && openModal(data?.values);
+      if (openModal) openModal(data?.values);
+
       toast.error(`Failed to ${action}`, {
         description: data?.error ?? "Error",
       });
     } else {
       router.refresh();
-      postSuccess && postSuccess();
+      if (postSuccess) postSuccess();
       toast.success(`Account ${action}d!`);
       if (action === "delete") router.push(backpath);
     }
@@ -73,13 +74,13 @@ const AccountForm = ({
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    const accountParsed = await insertAccountParams.safeParseAsync({  ...payload });
+    const accountParsed = await insertAccountParams.safeParseAsync({ ...payload });
     if (!accountParsed.success) {
       setErrors(accountParsed?.error.flatten().fieldErrors);
       return;
     }
 
-    closeModal && closeModal();
+    if (closeModal) closeModal();
     const values = accountParsed.data;
     const pendingAccount: Account = {
       updatedAt: account?.updatedAt ?? new Date(),
@@ -90,7 +91,7 @@ const AccountForm = ({
     };
     try {
       startMutation(async () => {
-        addOptimistic && addOptimistic({
+        if (addOptimistic) addOptimistic({
           data: pendingAccount,
           action: editing ? "update" : "create",
         });
@@ -101,7 +102,7 @@ const AccountForm = ({
 
         const errorFormatted = {
           error: error ?? "Error",
-          values: pendingAccount 
+          values: pendingAccount
         };
         onSuccess(
           editing ? "update" : "create",
@@ -118,7 +119,7 @@ const AccountForm = ({
   return (
     <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
       {/* Schema fields start */}
-              <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -139,7 +140,7 @@ const AccountForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -160,7 +161,7 @@ const AccountForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -181,7 +182,7 @@ const AccountForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -202,7 +203,7 @@ const AccountForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
@@ -236,9 +237,9 @@ const AccountForm = ({
           variant={"destructive"}
           onClick={() => {
             setIsDeleting(true);
-            closeModal && closeModal();
+            if (closeModal) closeModal();
             startMutation(async () => {
-              addOptimistic && addOptimistic({ action: "delete", data: account });
+              if (addOptimistic) addOptimistic({ action: "delete", data: account });
               const error = await deleteAccountAction(account.id);
               setIsDeleting(false);
               const errorFormatted = {
@@ -263,7 +264,7 @@ const SaveButton = ({
   editing,
   errors,
 }: {
-  editing: Boolean;
+  editing: boolean;
   errors: boolean;
 }) => {
   const { pending } = useFormStatus();

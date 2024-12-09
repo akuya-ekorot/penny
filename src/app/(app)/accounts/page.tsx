@@ -25,10 +25,10 @@ const Accounts = async () => {
   await checkAuth();
 
   const { accounts } = await getAccounts();
-  
+
   return (
     <Suspense fallback={<Loading />}>
-      <AccountList accounts={accounts}  />
+      <AccountList accounts={accounts} />
     </Suspense>
   );
 };
