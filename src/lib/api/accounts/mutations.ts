@@ -1,13 +1,13 @@
 import { db } from "@/lib/db/index";
 import { and, eq } from "drizzle-orm";
-import { 
-  AccountId, 
+import {
+  AccountId,
   NewAccountParams,
-  UpdateAccountParams, 
+  UpdateAccountParams,
   updateAccountSchema,
-  insertAccountSchema, 
+  insertAccountSchema,
   accounts,
-  accountIdSchema 
+  accountIdSchema
 } from "@/lib/db/schema/accounts";
 import { getUserAuth } from "@/lib/auth/utils";
 
@@ -15,7 +15,7 @@ export const createAccount = async (account: NewAccountParams) => {
   const { session } = await getUserAuth();
   const newAccount = insertAccountSchema.parse({ ...account, userId: session?.user.id! });
   try {
-    const [a] =  await db.insert(accounts).values(newAccount).returning();
+    const [a] = await db.insert(accounts).values(newAccount).returning();
     return { account: a };
   } catch (err) {
     const message = (err as Error).message ?? "Error, please try again";
@@ -29,11 +29,11 @@ export const updateAccount = async (id: AccountId, account: UpdateAccountParams)
   const { id: accountId } = accountIdSchema.parse({ id });
   const newAccount = updateAccountSchema.parse({ ...account, userId: session?.user.id! });
   try {
-    const [a] =  await db
-     .update(accounts)
-     .set({...newAccount, updatedAt: new Date() })
-     .where(and(eq(accounts.id, accountId!), eq(accounts.userId, session?.user.id!)))
-     .returning();
+    const [a] = await db
+      .update(accounts)
+      .set({ ...newAccount, updatedAt: new Date() })
+      .where(and(eq(accounts.id, accountId!), eq(accounts.userId, session?.user.id!)))
+      .returning();
     return { account: a };
   } catch (err) {
     const message = (err as Error).message ?? "Error, please try again";
@@ -46,8 +46,8 @@ export const deleteAccount = async (id: AccountId) => {
   const { session } = await getUserAuth();
   const { id: accountId } = accountIdSchema.parse({ id });
   try {
-    const [a] =  await db.delete(accounts).where(and(eq(accounts.id, accountId!), eq(accounts.userId, session?.user.id!)))
-    .returning();
+    const [a] = await db.delete(accounts).where(and(eq(accounts.id, accountId!), eq(accounts.userId, session?.user.id!)))
+      .returning();
     return { account: a };
   } catch (err) {
     const message = (err as Error).message ?? "Error, please try again";

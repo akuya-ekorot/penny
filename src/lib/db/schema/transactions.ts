@@ -7,16 +7,16 @@ import { users } from "@/lib/db/schema/auth";
 import { type getTransactions } from "@/lib/api/transactions/queries";
 
 import { nanoid, timestamps } from "@/lib/utils";
-
+import { budgets } from "./budgets";
 
 export const transactions = pgTable('transactions', {
   id: varchar("id", { length: 191 }).primaryKey().$defaultFn(() => nanoid()),
   description: text("description"),
   amount: integer("amount").notNull(),
-  budgetId: text("budget_id"),
+  budgetId: varchar("budget_id", { length: 256 }).references(() => budgets.id, { onDelete: 'set null' }),
   accountId: varchar("account_id", { length: 256 }).references(() => accounts.id, { onDelete: "cascade" }).notNull(),
   userId: varchar("user_id", { length: 256 }).references(() => users.id, { onDelete: "cascade" }).notNull(),
-  
+
   createdAt: timestamp("created_at")
     .notNull()
     .default(sql`now()`),
@@ -24,11 +24,10 @@ export const transactions = pgTable('transactions', {
     .notNull()
     .default(sql`now()`),
 
-}, (transactions) => {
-  return {
-    budgetIdIndex: uniqueIndex('transaction_budget_id_idx').on(transactions.budgetId),
-  }
-});
+}, (transactions) => ([{
+  budgetIdIndex: uniqueIndex('transaction_budget_id_idx').on(transactions.budgetId),
+  accountIdIndex: uniqueIndex('transaction_account_id_idx').on(transactions.accountId),
+}]));
 
 
 // Schema for transactions - used to validate API requests
@@ -38,7 +37,7 @@ export const insertTransactionSchema = createInsertSchema(transactions).omit(tim
 export const insertTransactionParams = baseSchema.extend({
   amount: z.coerce.number(),
   accountId: z.coerce.string().min(1)
-}).omit({ 
+}).omit({
   id: true,
   userId: true
 });
@@ -47,7 +46,7 @@ export const updateTransactionSchema = baseSchema;
 export const updateTransactionParams = baseSchema.extend({
   amount: z.coerce.number(),
   accountId: z.coerce.string().min(1)
-}).omit({ 
+}).omit({
   userId: true
 });
 export const transactionIdSchema = baseSchema.pick({ id: true });
@@ -58,7 +57,7 @@ export type NewTransaction = z.infer<typeof insertTransactionSchema>;
 export type NewTransactionParams = z.infer<typeof insertTransactionParams>;
 export type UpdateTransactionParams = z.infer<typeof updateTransactionParams>;
 export type TransactionId = z.infer<typeof transactionIdSchema>["id"];
-    
+
 // this type infers the return from getTransactions() - meaning it will include any joins
 export type CompleteTransaction = Awaited<ReturnType<typeof getTransactions>>["transactions"][number];
 
