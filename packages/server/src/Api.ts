@@ -4,7 +4,7 @@ import { Effect, Layer } from "effect"
 import { TodosRepository } from "./TodosRepository.js"
 
 const TodosApiLive = HttpApiBuilder.group(TodosApi, "todos", (handlers) =>
-  Effect.gen(function*() {
+  Effect.gen(function* () {
     const todos = yield* TodosRepository
     return handlers
       .handle("getAllTodos", () => todos.getAll)
