@@ -1,36 +1,6 @@
 import { Schema as S } from "effect"
-import { WhatsAppBaseMessage } from "../WhatsAppMessage.js"
-
-export const WhatsAppId = S.String.pipe(S.brand("WhatsAppId"))
-export const WhatsAppMessageId = S.String.pipe(S.brand("WhatsAppMessageId"))
-export const WhatsAppPhoneNumber = S.String.pipe(S.brand("WhatsAppPhoneNumber"))
-
-export const WhatsAppMessageType = S.Union(
-  S.Literal("audio"),
-  S.Literal("contacts"),
-  S.Literal("document"),
-  S.Literal("image"),
-  S.Literal("interactive"),
-  S.Literal("location"),
-  S.Literal("reaction"),
-  S.Literal("sticker"),
-  S.Literal("template"),
-  S.Literal("text"),
-  S.Literal("video")
-)
-
-export const BaseMessage = S.Struct({
-  type: WhatsAppMessageType,
-  messaging_product: S.Literal("whatsapp").pipe(S.required),
-  recipient_type: S.Literal("individual").pipe(S.optional),
-  to: WhatsAppPhoneNumber,
-  context: S.Struct({
-    message_id: WhatsAppMessageId
-  }).pipe(S.rename({ message_id: "messageId" }), S.optional)
-}).pipe(S.rename({
-  messaging_product: "messagingProduct",
-  recipient_type: "recipientType"
-}))
+import { WhatsAppId } from "../common.js"
+import { BaseMessage, WhatsAppMessageType } from "./index.js"
 
 export const WhatsAppContactAddress = S.Struct({
   street: S.String.pipe(S.optional),
@@ -98,13 +68,3 @@ export const WhatsAppContactsMessage = BaseMessage.pipe(
     contacts: S.Array(WhatsAppContact).pipe(S.required)
   }))
 )
-
-const _: typeof WhatsAppContactsMessage.Type = {
-  _tag: "WhatsAppContactsMessage",
-  type: "contacts",
-  contacts: [],
-  messagingProduct: "whatsapp",
-  context: { messageId: WhatsAppMessageId.make("") },
-  recipientType: "individual",
-  to: WhatsAppPhoneNumber.make("")
-}
