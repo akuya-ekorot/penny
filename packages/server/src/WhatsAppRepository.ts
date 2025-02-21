@@ -1,6 +1,5 @@
 import type { WhatsAppMessageId } from "@template/domain/whatsapp/common"
-import type { Notification } from "@template/domain/WhatsAppApi"
-import { NotificationNotFound } from "@template/domain/WhatsAppApi"
+import { type Notification, type VerificationUrlParams } from "@template/domain/WhatsAppApi"
 import { Effect, HashMap, Ref } from "effect"
 
 export class WhatsAppRepository extends Effect.Service<WhatsAppRepository>()("api/WhatsAppRepository", {
@@ -11,13 +10,6 @@ export class WhatsAppRepository extends Effect.Service<WhatsAppRepository>()("ap
       Effect.map((notifications) => Array.from(HashMap.values(notifications)))
     )
 
-    function getById(id: typeof WhatsAppMessageId.Type): Effect.Effect<Notification, NotificationNotFound> {
-      return Ref.get(notifications).pipe(
-        Effect.flatMap(HashMap.get(id)),
-        Effect.catchTag("NoSuchElementException", () => new NotificationNotFound({ id }))
-      )
-    }
-
     function create(notification: Notification): Effect.Effect<Notification> {
       return Ref.modify(notifications, (map) => {
         const id = notification.entry[0].changes[0].value.messages[0].id
@@ -25,6 +17,10 @@ export class WhatsAppRepository extends Effect.Service<WhatsAppRepository>()("ap
       })
     }
 
-    return { getAll, getById, create } as const
+    function verify(urlParams: VerificationUrlParams): Effect.Effect<number> {
+      return Effect.succeed(urlParams.challenge)
+    }
+
+    return { getAll, create, verify } as const
   })
 }) {}

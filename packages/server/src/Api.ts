@@ -23,6 +23,7 @@ const WhatsAppApiLive = HttpApiBuilder.group(AppApi, "whatsapp", (handlers) =>
     return handlers
       .handle("receiveNoification", ({ payload }) => notifications.create(payload))
       .handle("getAllNotifications", () => notifications.getAll)
+      .handle("verifyWebhookEndpoint", ({ urlParams }) => notifications.verify(urlParams))
   }))
 
 export const ApiLive = HttpApiBuilder.api(AppApi).pipe(
