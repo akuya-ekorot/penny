@@ -2,7 +2,7 @@ import { Todo, TodoId, TodoNotFound } from "@template/domain/TodosApi"
 import { Effect, HashMap, Ref } from "effect"
 
 export class TodosRepository extends Effect.Service<TodosRepository>()("api/TodosRepository", {
-  effect: Effect.gen(function* () {
+  effect: Effect.gen(function*() {
     const todos = yield* Ref.make(HashMap.empty<TodoId, Todo>())
 
     const getAll = Ref.get(todos).pipe(
@@ -46,4 +46,4 @@ export class TodosRepository extends Effect.Service<TodosRepository>()("api/Todo
       remove
     } as const
   })
-}) { }
+}) {}

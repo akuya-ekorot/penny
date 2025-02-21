@@ -1,5 +1,5 @@
 import { Schema as S } from "effect"
-import { MessagingProduct, WhatsAppId, WhatsAppMessageId, WhatsAppPhoneNumber } from "../common.js"
+import { DateFromUnixTime, MessagingProduct, WhatsAppId, WhatsAppMessageId, WhatsAppPhoneNumber } from "../common.js"
 import { NotificationError } from "../notification/error.js"
 
 export const WhatsAppMessageType = S.Union(
@@ -40,9 +40,8 @@ export const BaseNotificationMessage = S.Struct({
     from: WhatsAppId,
     id: WhatsAppMessageId
   }).pipe(S.optional),
-  errors: S.Array(NotificationError),
+  errors: S.Array(NotificationError).pipe(S.optional),
   from: WhatsAppId,
   id: WhatsAppMessageId,
-  timestamp: S.Date,
-  type: WhatsAppMessageType
+  timestamp: DateFromUnixTime
 })

@@ -1,11 +1,13 @@
 import { HttpApiBuilder } from "@effect/platform"
-import { TodosApi } from "@template/domain/TodosApi"
+import { AppApi } from "@template/domain/Api"
 import { Effect, Layer } from "effect"
 import { TodosRepository } from "./TodosRepository.js"
+import { WhatsAppRepository } from "./WhatsAppRepository.js"
 
-const TodosApiLive = HttpApiBuilder.group(TodosApi, "todos", (handlers) =>
-  Effect.gen(function* () {
+const TodosApiLive = HttpApiBuilder.group(AppApi, "todos", (handlers) =>
+  Effect.gen(function*() {
     const todos = yield* TodosRepository
+
     return handlers
       .handle("getAllTodos", () => todos.getAll)
       .handle("getTodoById", ({ path: { id } }) => todos.getById(id))
@@ -14,6 +16,16 @@ const TodosApiLive = HttpApiBuilder.group(TodosApi, "todos", (handlers) =>
       .handle("removeTodo", ({ path: { id } }) => todos.remove(id))
   }))
 
-export const ApiLive = HttpApiBuilder.api(TodosApi).pipe(
-  Layer.provide(TodosApiLive)
+const WhatsAppApiLive = HttpApiBuilder.group(AppApi, "whatsapp", (handlers) =>
+  Effect.gen(function*() {
+    const notifications = yield* WhatsAppRepository
+
+    return handlers
+      .handle("receiveNoification", ({ payload }) => notifications.create(payload))
+      .handle("getAllNotifications", () => notifications.getAll)
+  }))
+
+export const ApiLive = HttpApiBuilder.api(AppApi).pipe(
+  Layer.provide(TodosApiLive),
+  Layer.provide(WhatsAppApiLive)
 )

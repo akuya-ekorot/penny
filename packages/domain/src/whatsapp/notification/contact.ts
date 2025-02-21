@@ -3,7 +3,7 @@ import { WhatsAppId, WhatsAppUserId } from "../common.js"
 
 export const NotificationContact = S.Struct({
   wa_id: WhatsAppId,
-  user_id: WhatsAppUserId,
+  user_id: WhatsAppUserId.pipe(S.optional),
   profile: S.Struct({ name: S.String })
 }).pipe(
   S.rename({
