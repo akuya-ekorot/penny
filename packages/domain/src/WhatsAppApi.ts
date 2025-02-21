@@ -11,7 +11,6 @@ export class NotificationNotFound extends Schema.TaggedError<NotificationNotFoun
 ) {}
 
 export class WhatsAppApiGroup extends HttpApiGroup.make("whatsapp")
-  .prefix("/whatsapp")
   .add(
     HttpApiEndpoint.post("receiveNoification", "/webhook")
       .addSuccess(Notification)
@@ -21,4 +20,5 @@ export class WhatsAppApiGroup extends HttpApiGroup.make("whatsapp")
     HttpApiEndpoint.get("getAllNotifications", "/notifications")
       .addSuccess(Schema.Array(Notification))
   )
+  .prefix("/whatsapp")
 {}
