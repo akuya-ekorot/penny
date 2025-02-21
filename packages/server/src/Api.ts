@@ -5,7 +5,7 @@ import { TodosRepository } from "./TodosRepository.js"
 import { WhatsAppRepository } from "./WhatsAppRepository.js"
 
 const TodosApiLive = HttpApiBuilder.group(AppApi, "todos", (handlers) =>
-  Effect.gen(function*() {
+  Effect.gen(function* () {
     const todos = yield* TodosRepository
 
     return handlers
@@ -17,7 +17,7 @@ const TodosApiLive = HttpApiBuilder.group(AppApi, "todos", (handlers) =>
   }))
 
 const WhatsAppApiLive = HttpApiBuilder.group(AppApi, "whatsapp", (handlers) =>
-  Effect.gen(function*() {
+  Effect.gen(function* () {
     const notifications = yield* WhatsAppRepository
 
     return handlers

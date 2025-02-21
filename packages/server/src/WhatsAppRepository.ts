@@ -4,7 +4,7 @@ import { NotificationNotFound } from "@template/domain/WhatsAppApi"
 import { Effect, HashMap, Ref } from "effect"
 
 export class WhatsAppRepository extends Effect.Service<WhatsAppRepository>()("api/WhatsAppRepository", {
-  effect: Effect.gen(function*() {
+  effect: Effect.gen(function* () {
     const notifications = yield* Ref.make(HashMap.empty<typeof WhatsAppMessageId.Type, Notification>())
 
     const getAll = Ref.get(notifications).pipe(
@@ -27,4 +27,4 @@ export class WhatsAppRepository extends Effect.Service<WhatsAppRepository>()("ap
 
     return { getAll, getById, create } as const
   })
-}) {}
+}) { }
