@@ -12,14 +12,14 @@ export class Todo extends Schema.Class<Todo>("Todo")({
   id: TodoId,
   text: Schema.NonEmptyTrimmedString,
   done: Schema.Boolean
-}) {}
+}) { }
 
 export class TodoNotFound extends Schema.TaggedError<TodoNotFound>()(
   "TodoNotFound",
   {
     id: Schema.Number
   }
-) {}
+) { }
 
 export class TodosApiGroup extends HttpApiGroup.make("todos")
   .add(
@@ -48,6 +48,6 @@ export class TodosApiGroup extends HttpApiGroup.make("todos")
       .addError(TodoNotFound, { status: 404 })
       .setPath(Schema.Struct({ id: Schema.NumberFromString }))
   )
-{}
+{ }
 
-export class TodosApi extends HttpApi.make("api").add(TodosApiGroup) {}
+export class TodosApi extends HttpApi.make("api").add(TodosApiGroup) { }
