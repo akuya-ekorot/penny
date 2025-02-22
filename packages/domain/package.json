@@ -26,7 +26,10 @@
   "dependencies": {
     "@effect/platform": "latest",
     "@effect/sql": "latest",
-    "effect": "latest"
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.39.3",
+    "effect": "latest",
+    "pg": "^8.13.3"
   },
   "effect": {
     "generateExports": {
@@ -39,5 +42,10 @@
         "**/*.ts"
       ]
     }
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.11",
+    "drizzle-kit": "^0.30.4",
+    "tsx": "^4.19.3"
   }
 }

@@ -5,4 +5,6 @@ import { NotificationChange } from "./change.js"
 export const NotificationEntry = S.Struct({
   id: WhatsAppId,
   changes: S.Array(NotificationChange)
-})
+}).pipe(S.rename({
+  id: "whatsAppId"
+}))

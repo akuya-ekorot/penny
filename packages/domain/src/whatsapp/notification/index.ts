@@ -1,9 +1,9 @@
 import { Schema as S } from "effect"
 import { NotificationEntry } from "./entry.js"
 
-export const NotificationObject = S.Literal("whatsapp_business_account")
-
-export const Notification = S.Struct({
-  object: NotificationObject,
-  entry: S.Array(NotificationEntry)
-})
+export class Notification extends S.Class<Notification>("Notification")(
+  S.Struct({
+    object: S.Literal("whatsapp_business_account"),
+    entry: S.Array(NotificationEntry)
+  })
+) { }

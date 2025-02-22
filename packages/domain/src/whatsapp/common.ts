@@ -21,3 +21,28 @@ export const DateFromUnixTime = S.transform(
     encode: (date) => UnixTime.make(Math.floor(date.getTime() / 1000))
   }
 )
+export const VerifyWebhookParamsSchema = S.transform(
+  S.Struct({
+    "hub.mode": S.Literal("subscribe"),
+    "hub.challenge": S.NumberFromString,
+    "hub.verify_token": S.String
+  }),
+  S.Struct({
+    mode: S.Literal("subscribe"),
+    challenge: S.Number,
+    verifyToken: S.String
+  }),
+  {
+    strict: true,
+    decode: (from) => ({
+      mode: from["hub.mode"],
+      challenge: from["hub.challenge"],
+      verifyToken: from["hub.verify_token"]
+    }),
+    encode: (to) => ({
+      "hub.mode": to.mode,
+      "hub.verify_token": to.verifyToken,
+      "hub.challenge": to.challenge
+    })
+  }
+)

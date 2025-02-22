@@ -39,7 +39,12 @@ export const BaseNotificationMessage = S.Struct({
     frequently_forwarded: S.Boolean,
     from: WhatsAppId,
     id: WhatsAppMessageId
-  }).pipe(S.optional),
+  }).pipe(
+    S.rename({
+      id: "replyTo"
+    }),
+    S.optional
+  ),
   errors: S.Array(NotificationError).pipe(S.optional),
   from: WhatsAppId,
   id: WhatsAppMessageId,
