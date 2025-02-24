@@ -1,9 +1,326 @@
 {
-  "id": "b4f15d0b-cd5f-457f-9c68-b14534757907",
+  "id": "f5c4afab-3450-458f-b4a7-1675ab2a7fd2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.accounts": {
+      "name": "accounts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "account_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'checking'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "accounts_user_id_users_id_fk": {
+          "name": "accounts_user_id_users_id_fk",
+          "tableFrom": "accounts",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.api_usage_logs": {
+      "name": "api_usage_logs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "api_type": {
+          "name": "api_type",
+          "type": "api_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "request_details": {
+          "name": "request_details",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "response_details": {
+          "name": "response_details",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "usage_cost": {
+          "name": "usage_cost",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "api_usage_logs_user_id_users_id_fk": {
+          "name": "api_usage_logs_user_id_users_id_fk",
+          "tableFrom": "api_usage_logs",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.budget_categories": {
+      "name": "budget_categories",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "budget_categories_user_id_users_id_fk": {
+          "name": "budget_categories_user_id_users_id_fk",
+          "tableFrom": "budget_categories",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_category_name_unique": {
+          "name": "user_category_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id",
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.budgets": {
+      "name": "budgets",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "period_start": {
+          "name": "period_start",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "period_end": {
+          "name": "period_end",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "planned_amount": {
+          "name": "planned_amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "budgets_category_id_budget_categories_id_fk": {
+          "name": "budgets_category_id_budget_categories_id_fk",
+          "tableFrom": "budgets",
+          "tableTo": "budget_categories",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "budget_category_period_unique": {
+          "name": "budget_category_period_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "category_id",
+            "period_start"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.changes": {
       "name": "changes",
       "schema": "",
@@ -15,16 +332,55 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "entry_id": {
+          "name": "entry_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "field": {
           "name": "field",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'messages'"
+        },
+        "messaging_product": {
+          "name": "messaging_product",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'whatsapp'"
+        },
+        "display_phone_number": {
+          "name": "display_phone_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_number_id": {
+          "name": "phone_number_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "changes_entry_id_entries_id_fk": {
+          "name": "changes_entry_id_entries_id_fk",
+          "tableFrom": "changes",
+          "tableTo": "entries",
+          "columnsFrom": [
+            "entry_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -42,11 +398,17 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "whatsapp_id": {
-          "name": "whatsapp_id",
-          "type": "text",
+        "change_id": {
+          "name": "change_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "wa_id": {
+          "name": "wa_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "whatsapp_user_id": {
           "name": "whatsapp_user_id",
@@ -54,63 +416,29 @@
           "primaryKey": false,
           "notNull": false
         },
-        "profile_name": {
-          "name": "profile_name",
+        "name": {
+          "name": "name",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "value_id": {
-          "name": "value_id",
-          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "contacts_value_id_values_id_fk": {
-          "name": "contacts_value_id_values_id_fk",
+        "contacts_change_id_changes_id_fk": {
+          "name": "contacts_change_id_changes_id_fk",
           "tableFrom": "contacts",
-          "tableTo": "values",
+          "tableTo": "changes",
           "columnsFrom": [
-            "value_id"
+            "change_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "contacts_whatsapp_id_unique": {
-          "name": "contacts_whatsapp_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "whatsapp_id"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.conversations": {
-      "name": "conversations",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -128,15 +456,15 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "whatsapp_id": {
-          "name": "whatsapp_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "notification_id": {
           "name": "notification_id",
           "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "whatsapp_business_account_id": {
+          "name": "whatsapp_business_account_id",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }
@@ -174,21 +502,27 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "change_id": {
+          "name": "change_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "message_id": {
           "name": "message_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "type": {
           "name": "type",
-          "type": "message_types",
+          "type": "message_type",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "from": {
-          "name": "from",
+        "from_wa_id": {
+          "name": "from_wa_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -197,64 +531,50 @@
           "name": "timestamp",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         },
-        "forwarded": {
-          "name": "forwarded",
-          "type": "boolean",
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         },
-        "frequently_forwarded": {
-          "name": "frequently_forwarded",
-          "type": "boolean",
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
-        },
-        "reply_to": {
-          "name": "reply_to",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "value_id": {
-          "name": "value_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "messages_value_id_values_id_fk": {
-          "name": "messages_value_id_values_id_fk",
+        "messages_change_id_changes_id_fk": {
+          "name": "messages_change_id_changes_id_fk",
           "tableFrom": "messages",
-          "tableTo": "values",
+          "tableTo": "changes",
           "columnsFrom": [
-            "value_id"
+            "change_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "messages_reply_to_messages_id_fk": {
-          "name": "messages_reply_to_messages_id_fk",
-          "tableFrom": "messages",
-          "tableTo": "messages",
-          "columnsFrom": [
-            "reply_to"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "messages_message_id_unique": {
+          "name": "messages_message_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "message_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -286,8 +606,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.statuses": {
-      "name": "statuses",
+    "public.system_messages": {
+      "name": "system_messages",
       "schema": "",
       "columns": {
         "id": {
@@ -303,57 +623,43 @@
           "primaryKey": false,
           "notNull": false
         },
-        "biz_opaque_callback_data": {
-          "name": "biz_opaque_callback_data",
+        "body": {
+          "name": "body",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "conversation_id": {
-          "name": "conversation_id",
-          "type": "uuid",
+        "identity": {
+          "name": "identity",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "pricing_category": {
-          "name": "pricing_category",
-          "type": "pricing_categories",
+        "wa_id": {
+          "name": "wa_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "system_message_type",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
-        "pricing_model": {
-          "name": "pricing_model",
+        "customer": {
+          "name": "customer",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'CPB'"
-        },
-        "recepient_id": {
-          "name": "recepient_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "status": {
-          "name": "status",
-          "type": "message_status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "timestamp": {
-          "name": "timestamp",
-          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "statuses_message_id_messages_id_fk": {
-          "name": "statuses_message_id_messages_id_fk",
-          "tableFrom": "statuses",
+        "system_messages_message_id_messages_id_fk": {
+          "name": "system_messages_message_id_messages_id_fk",
+          "tableFrom": "system_messages",
           "tableTo": "messages",
           "columnsFrom": [
             "message_id"
@@ -361,20 +667,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "statuses_conversation_id_conversations_id_fk": {
-          "name": "statuses_conversation_id_conversations_id_fk",
-          "tableFrom": "statuses",
-          "tableTo": "conversations",
-          "columnsFrom": [
-            "conversation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -384,8 +677,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.values": {
-      "name": "values",
+    "public.text_messages": {
+      "name": "text_messages",
       "schema": "",
       "columns": {
         "id": {
@@ -395,45 +688,151 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "messaging_product": {
-          "name": "messaging_product",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'whatsapp'"
-        },
-        "change_id": {
-          "name": "change_id",
+        "message_id": {
+          "name": "message_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "display_phone_number": {
-          "name": "display_phone_number",
+        "text_body": {
+          "name": "text_body",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
-        },
-        "phone_number_id": {
-          "name": "phone_number_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "values_change_id_changes_id_fk": {
-          "name": "values_change_id_changes_id_fk",
-          "tableFrom": "values",
-          "tableTo": "changes",
+        "text_messages_message_id_messages_id_fk": {
+          "name": "text_messages_message_id_messages_id_fk",
+          "tableFrom": "text_messages",
+          "tableTo": "messages",
           "columnsFrom": [
-            "change_id"
+            "message_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "text_messages_message_id_unique": {
+          "name": "text_messages_message_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "message_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.transaction_entries": {
+      "name": "transaction_entries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "transaction_event_id": {
+          "name": "transaction_event_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "account_id": {
+          "name": "account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "budget_category_id": {
+          "name": "budget_category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "entry_type": {
+          "name": "entry_type",
+          "type": "entry_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "transaction_entries_transaction_event_id_transaction_events_id_fk": {
+          "name": "transaction_entries_transaction_event_id_transaction_events_id_fk",
+          "tableFrom": "transaction_entries",
+          "tableTo": "transaction_events",
+          "columnsFrom": [
+            "transaction_event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "transaction_entries_account_id_accounts_id_fk": {
+          "name": "transaction_entries_account_id_accounts_id_fk",
+          "tableFrom": "transaction_entries",
+          "tableTo": "accounts",
+          "columnsFrom": [
+            "account_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "transaction_entries_budget_category_id_budget_categories_id_fk": {
+          "name": "transaction_entries_budget_category_id_budget_categories_id_fk",
+          "tableFrom": "transaction_entries",
+          "tableTo": "budget_categories",
+          "columnsFrom": [
+            "budget_category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -442,45 +841,199 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.transaction_events": {
+      "name": "transaction_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transaction_date": {
+          "name": "transaction_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ai_extracted_data": {
+          "name": "ai_extracted_data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "transaction_events_user_id_users_id_fk": {
+          "name": "transaction_events_user_id_users_id_fk",
+          "tableFrom": "transaction_events",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "whatsapp_user_id": {
+          "name": "whatsapp_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_whatsapp_user_id_unique": {
+          "name": "users_whatsapp_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "whatsapp_user_id"
+          ]
+        },
+        "users_phone_number_unique": {
+          "name": "users_phone_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "phone_number"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
-    "public.message_status": {
-      "name": "message_status",
+    "public.account_type_enum": {
+      "name": "account_type_enum",
       "schema": "public",
       "values": [
-        "delivered",
-        "read",
-        "sent"
+        "mobile_money",
+        "checking",
+        "savings",
+        "cash",
+        "other"
       ]
     },
-    "public.message_types": {
-      "name": "message_types",
+    "public.api_type_enum": {
+      "name": "api_type_enum",
       "schema": "public",
       "values": [
-        "audio",
-        "contacts",
-        "document",
-        "image",
-        "interactive",
-        "location",
-        "reaction",
-        "sticker",
-        "template",
+        "whatsapp_api",
+        "ai_service_transaction_parsing",
+        "ai_service_chat_completion"
+      ]
+    },
+    "public.entry_type_enum": {
+      "name": "entry_type_enum",
+      "schema": "public",
+      "values": [
+        "debit",
+        "credit"
+      ]
+    },
+    "public.message_type": {
+      "name": "message_type",
+      "schema": "public",
+      "values": [
         "text",
-        "video"
+        "image",
+        "document",
+        "unknown"
       ]
     },
-    "public.pricing_categories": {
-      "name": "pricing_categories",
+    "public.system_message_type": {
+      "name": "system_message_type",
       "schema": "public",
       "values": [
-        "authentication",
-        "authentication_international",
-        "marketing",
-        "utility",
-        "service",
-        "referral_conversion"
+        "customer_changed_number",
+        "customer_identity_changed"
       ]
     }
   },

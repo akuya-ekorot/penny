@@ -6,4 +6,4 @@ export class Notification extends S.Class<Notification>("Notification")(
     object: S.Literal("whatsapp_business_account"),
     entry: S.Array(NotificationEntry)
   })
-) { }
+) {}

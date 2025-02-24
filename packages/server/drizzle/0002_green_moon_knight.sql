@@ -1,1 +1,0 @@
-ALTER TABLE "messages" ADD CONSTRAINT "replies" FOREIGN KEY ("reply_to") REFERENCES "public"."messages"("id") ON DELETE no action ON UPDATE no action;
