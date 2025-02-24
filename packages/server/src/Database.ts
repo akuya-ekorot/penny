@@ -10,12 +10,8 @@ export class DatabaseService extends Effect.Service<DatabaseService>()("app/Data
   effect: Effect.gen(function*() {
     const databaseUrl = yield* Config.redacted("DATABASE_URL")
     const pool = new Pool({ connectionString: Redacted.value(databaseUrl) })
+    const db = drizzle(pool, { schema: DrizzleSchemas, logger: true })
 
-    const db = drizzle(pool, {
-      schema: DrizzleSchemas,
-      logger: true
-    })
-
-    return db
+    return { db }
   })
 }) {}

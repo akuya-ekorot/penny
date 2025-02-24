@@ -18,6 +18,7 @@ export class User extends S.Class<User>("User")(
   S.Struct({
     id: S.UUID.pipe(S.brand("UserId")),
     name: S.String.pipe(S.optional),
+    waId: S.optional(S.String).pipe(S.fromKey("wa_id")),
     WhatsAppUserId: S.propertySignature(S.NonEmptyTrimmedString).pipe(S.fromKey("whatsapp_user_id")),
     phoneNumber: S.propertySignature(S.NonEmptyTrimmedString).pipe(S.fromKey("phone_number")),
 
@@ -90,41 +91,33 @@ export class TransactionEntry extends S.Class<TransactionEntry>("TransactionEntr
   })
 ) {}
 
-export class Notification extends S.Class<Notification>("Notification")(
-  S.Struct({
-    id: S.UUID.pipe(S.brand("NotificationId")),
-    object: S.String
-  })
-) {}
+export class Notification extends S.Class<Notification>("Notification")({
+  id: S.UUID.pipe(S.brand("NotificationId")),
+  object: S.Literal("whatsapp_business_account")
+}) {}
 
-export class Entry extends S.Class<Entry>("Entry")(
-  S.Struct({
-    id: S.UUID.pipe(S.brand("EntryId")),
-    notificationId: S.propertySignature(S.UUID.pipe(S.brand("NotificationId"))).pipe(S.fromKey("notification_id")),
-    whatsappBusinessAccountId: S.propertySignature(S.String).pipe(S.fromKey("whatsapp_business_account_id"))
-  })
-) {}
+export class Entry extends S.Class<Entry>("Entry")({
+  id: S.UUID.pipe(S.brand("EntryId")),
+  notificationId: S.propertySignature(S.UUID.pipe(S.brand("NotificationId"))).pipe(S.fromKey("notification_id")),
+  whatsappBusinessAccountId: S.propertySignature(S.String).pipe(S.fromKey("whatsapp_business_account_id"))
+}) {}
 
-export class Change extends S.Class<Change>("Change")(
-  S.Struct({
-    id: S.UUID.pipe(S.brand("ChangeId")),
-    entryId: S.propertySignature(S.UUID.pipe(S.brand("EntryId"))).pipe(S.fromKey("entry_id")),
-    field: S.propertySignature(S.String).pipe(S.fromKey("field")),
-    messagingProduct: S.propertySignature(S.String).pipe(S.fromKey("messaging_product")),
-    displayPhoneNumber: S.optional(S.String).pipe(S.fromKey("display_phone_number")),
-    phoneNumberId: S.optional(S.String).pipe(S.fromKey("phone_number_id"))
-  })
-) {}
+export class Change extends S.Class<Change>("Change")({
+  id: S.UUID.pipe(S.brand("ChangeId")),
+  entryId: S.propertySignature(S.UUID.pipe(S.brand("EntryId"))).pipe(S.fromKey("entry_id")),
+  field: S.propertySignature(S.String).pipe(S.fromKey("field")),
+  messagingProduct: S.propertySignature(S.String).pipe(S.fromKey("messaging_product")),
+  displayPhoneNumber: S.optional(S.String).pipe(S.fromKey("display_phone_number")),
+  phoneNumberId: S.optional(S.String).pipe(S.fromKey("phone_number_id"))
+}) {}
 
-export class Contact extends S.Class<Contact>("Contact")(
-  S.Struct({
-    id: S.UUID.pipe(S.brand("ContactId")),
-    changeId: S.propertySignature(S.UUID.pipe(S.brand("ChangeId"))).pipe(S.fromKey("change_id")),
-    waId: S.optional(S.String).pipe(S.fromKey("wa_id")),
-    whatsAppUserId: S.optional(S.String).pipe(S.fromKey("whatsapp_user_id")),
-    name: S.optional(S.String)
-  })
-) {}
+export class Contact extends S.Class<Contact>("Contact")({
+  id: S.UUID.pipe(S.brand("ContactId")),
+  changeId: S.propertySignature(S.UUID.pipe(S.brand("ChangeId"))).pipe(S.fromKey("change_id")),
+  waId: S.optional(S.String).pipe(S.fromKey("wa_id")),
+  whatsAppUserId: S.optional(S.String).pipe(S.fromKey("whatsapp_user_id")),
+  name: S.optional(S.String)
+}) {}
 
 export class SystemMessage extends S.Class<SystemMessage>("SystemMessage")(
   S.Struct({
